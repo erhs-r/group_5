@@ -76,7 +76,7 @@ master_covid_election <- covid_counties_clean %>%
 
 master_covid_election_with_dates <- covid_counties_clean_dates %>% 
   inner_join(population_counties_clean, by = "fips") %>% 
-  inner_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
+  left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
 
