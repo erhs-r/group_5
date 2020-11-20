@@ -37,7 +37,8 @@ election_counties_clean <- election_counties %>%
          winner = if_else(biden_total > trump_total, "biden", "trump"),
          winner = factor(winner),
          state = str_replace(state, "-", " ")) %>% 
-  rename(county = name)
+  rename(county = name) %>%
+  filter(state != "district of-columbia")
 
 
 ### Retaining date column and changing date column to Date class
