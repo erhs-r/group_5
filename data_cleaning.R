@@ -1,4 +1,5 @@
 library(tidyverse)
+library(lubridate)
 
 #Initial reading of the main data file
 covid_counties <- read_csv("data_raw/us-counties.csv")
@@ -30,11 +31,11 @@ election_counties_clean <- election_counties %>%
          winner = if_else(biden_total > trump_total, "biden", "trump")) %>% 
   rename(county = name)
 
-#Filtering covid df to only have the latest data (11/17/2020) and selecting important columns
+
+### Retaining date column and changing date column to Date class
 covid_counties_clean <- covid_counties %>% 
-  filter(date == "2020-11-17") %>% 
-  select(fips, county, state, cases, deaths) %>% 
-  mutate(county = str_to_lower(county),
+  mutate(date = ymd(date),
+         county = str_to_lower(county),
          state = str_to_lower(state))
 
 # CHECKING TO MAKE SURE CUMULATIVE AND NOT ACTIVE CASES
