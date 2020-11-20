@@ -70,7 +70,7 @@ masks_counties_clean <- masks_counties %>%
 #Combining Data Sets
 master_covid_election <- covid_counties_clean %>% 
   inner_join(population_counties_clean, by = "fips") %>% 
-  inner_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
+  left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
 
