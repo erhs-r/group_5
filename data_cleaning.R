@@ -86,8 +86,53 @@ master_covid_election_with_dates <- covid_counties_clean_dates %>%
 #   select(state, county, death_rate) %>% 
 #   arrange(desc(death_rate))
 
-#Writing master dataframes to data folder
 
+#states won biden or trump. source = https://www.270towin.com/2020-election-results-live/
+biden_states <- c("WA", "OR", "CA", "NV", "AZ", "NM", "CO", "HI", "MN", "WI", 
+                  "IL", "MI", "GA", "PA", "VA", "NY", "VT", "NH", "MA", "RI", 
+                  "CT", "NJ", "DE", "MD", "DC")
+trump_states <- c("AK", "ID", "UT", "MT", "WY", "ND", "SD", "KS", "OK", "TX", 
+                  "LA", "IA", "MO", "AR", "MS", "AL", "TN", "KY", "IN", "OH", 
+                  "WV", "NC", "SC", "FL")
+split_states <- c("NE", "ME")
+
+#adding state win column
+master_covid_election <- master_covid_election %>%
+  mutate(state_win = case_when(state_abb %in% biden_states ~ "biden",
+                               state_abb %in% trump_states ~ "trump",
+                               state_abb %in% split_states ~ "split",
+                               is.na(winner) & state %in% biden_states ~ "biden",
+                               is.na(winner)& state %in% trump_states ~ "trump",
+                               is.na(winner)& state %in% split_states ~ "split"))
+
+master_covid_election_with_dates <- master_covid_election_with_dates %>%
+  mutate(state_win = case_when(state_abb %in% biden_states ~ "biden",
+                               state_abb %in% trump_states ~ "trump",
+                               state_abb %in% split_states ~ "split",
+                               is.na(winner) & state %in% biden_states ~ "biden",
+                               is.na(winner)& state %in% trump_states ~ "trump",
+                               is.na(winner)& state %in% split_states ~ "split"))
+
+#adding total cases per state column
+total_state_cases <- master_covid_election %>%
+  group_by(state_abb) %>%
+  summarise(total_cases = sum(cases))
+
+master_covid_election <- master_covid_election %>%
+  inner_join(total_state_cases, by = "state_abb") %>%
+  mutate(state = factor(state),
+         state_abb = factor(state_abb))
+
+# replacing NAs in winner column with info from state_win
+master_covid_election <- master_covid_election %>%
+  mutate(winner = case_when(is.na(winner) ~ state_win,
+                            !is.na(winner) ~ winner))
+#replacing NAs in other columns with 0's
+master_covid_election[is.na(master_covid_election)] <- 0
+
+
+
+#Writing master dataframes to data folder
 write_csv(master_covid_election, "./data/master_covid_election.csv")
 write_csv(master_covid_election_with_dates, "./data/master_covid_election_with_dates.csv")
 
