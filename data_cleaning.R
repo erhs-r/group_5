@@ -35,7 +35,8 @@ election_counties_clean <- election_counties %>%
          biden_total = results_bidenj + results_absentee_bidenj,
          percent_biden = biden_total / (biden_total + trump_total),
          winner = if_else(biden_total > trump_total, "biden", "trump"),
-         winner = factor(winner)) %>% 
+         winner = factor(winner),
+         state = str_replace(state, "-", " ")) %>% 
   rename(county = name)
 
 
