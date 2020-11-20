@@ -1,5 +1,6 @@
 library(tidyverse)
 library(lubridate)
+library(datasets)
 
 #Initial reading of the main data file
 covid_counties <- read_csv("data_raw/us-counties.csv")
@@ -8,6 +9,11 @@ masks_counties <- read_csv("data_raw/mask-use-by-county.csv")
 # This is from :
 #https://github.com/balsama/us_counties_data/blob/main/data/counties.csv#L15
 population_counties <- read_csv("data_raw/population_counties.csv")
+
+#data from satasets package to add 2 letter state abbr. column
+states = tibble(state_abb = state.abb, state = str_to_lower(state.name)) %>%
+  mutate(state_abb = factor(state_abb))
+  
 
 #-------------------------------------------------------------------------------
 
@@ -63,12 +69,14 @@ masks_counties_clean <- masks_counties %>%
 master_covid_election <- covid_counties_clean %>% 
   inner_join(population_counties_clean, by = "fips") %>% 
   inner_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
-  inner_join(masks_counties_clean, by = "fips")
+  inner_join(masks_counties_clean, by = "fips") %>%
+  inner_join(states, by = "state")
 
 master_covid_election_with_dates <- covid_counties_clean_dates %>% 
   inner_join(population_counties_clean, by = "fips") %>% 
   inner_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
-  inner_join(masks_counties_clean, by = "fips")
+  inner_join(masks_counties_clean, by = "fips") %>%
+  inner_join(states, by = "state")
 
 # #Just looking at what counties had the highest death rate
 # master_covid_election %>% 
