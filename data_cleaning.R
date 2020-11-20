@@ -1,4 +1,6 @@
 library(tidyverse)
+library(lubridate)
+library(datasets)
 
 #Initial reading of the main data file
 covid_counties <- read_csv("data_raw/us-counties.csv")
@@ -7,6 +9,11 @@ masks_counties <- read_csv("data_raw/mask-use-by-county.csv")
 # This is from :
 #https://github.com/balsama/us_counties_data/blob/main/data/counties.csv#L15
 population_counties <- read_csv("data_raw/population_counties.csv")
+
+#data from satasets package to add 2 letter state abbr. column
+states = tibble(state_abb = state.abb, state = str_to_lower(state.name)) %>%
+  mutate(state_abb = factor(state_abb))
+  
 
 #-------------------------------------------------------------------------------
 
@@ -27,14 +34,23 @@ election_counties_clean <- election_counties %>%
          trump_total = results_trumpd + results_absentee_trumpd,
          biden_total = results_bidenj + results_absentee_bidenj,
          percent_biden = biden_total / (biden_total + trump_total),
-         winner = if_else(biden_total > trump_total, "biden", "trump")) %>% 
-  rename(county = name)
+         winner = if_else(biden_total > trump_total, "biden", "trump"),
+         winner = factor(winner),
+         state = str_replace(state, "-", " ")) %>% 
+  rename(county = name) %>%
+  filter(state != "district of-columbia")
 
-#Filtering covid df to only have the latest data (11/17/2020) and selecting important columns
+
+### Retaining date column and changing date column to Date class
 covid_counties_clean <- covid_counties %>% 
   filter(date == "2020-11-17") %>% 
   select(fips, county, state, cases, deaths) %>% 
   mutate(county = str_to_lower(county),
+         state = str_to_lower(state))
+
+covid_counties_clean_dates <- covid_counties %>% 
+  mutate(date = ymd(date),
+         county = str_to_lower(county),
          state = str_to_lower(state))
 
 # CHECKING TO MAKE SURE CUMULATIVE AND NOT ACTIVE CASES
@@ -54,8 +70,15 @@ masks_counties_clean <- masks_counties %>%
 #Combining Data Sets
 master_covid_election <- covid_counties_clean %>% 
   inner_join(population_counties_clean, by = "fips") %>% 
-  inner_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
-  inner_join(masks_counties_clean, by = "fips")
+  left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
+  inner_join(masks_counties_clean, by = "fips") %>%
+  inner_join(states, by = "state")
+
+master_covid_election_with_dates <- covid_counties_clean_dates %>% 
+  inner_join(population_counties_clean, by = "fips") %>% 
+  left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
+  inner_join(masks_counties_clean, by = "fips") %>%
+  inner_join(states, by = "state")
 
 # #Just looking at what counties had the highest death rate
 # master_covid_election %>% 
@@ -64,4 +87,52 @@ master_covid_election <- covid_counties_clean %>%
 #   arrange(desc(death_rate))
 
 
+#states won biden or trump. source = https://www.270towin.com/2020-election-results-live/
+biden_states <- c("WA", "OR", "CA", "NV", "AZ", "NM", "CO", "HI", "MN", "WI", 
+                  "IL", "MI", "GA", "PA", "VA", "NY", "VT", "NH", "MA", "RI", 
+                  "CT", "NJ", "DE", "MD", "DC")
+trump_states <- c("AK", "ID", "UT", "MT", "WY", "ND", "SD", "KS", "OK", "TX", 
+                  "LA", "IA", "MO", "AR", "MS", "AL", "TN", "KY", "IN", "OH", 
+                  "WV", "NC", "SC", "FL")
+split_states <- c("NE", "ME")
+
+#adding state win column
+master_covid_election <- master_covid_election %>%
+  mutate(state_win = case_when(state_abb %in% biden_states ~ "biden",
+                               state_abb %in% trump_states ~ "trump",
+                               state_abb %in% split_states ~ "split",
+                               is.na(winner) & state %in% biden_states ~ "biden",
+                               is.na(winner)& state %in% trump_states ~ "trump",
+                               is.na(winner)& state %in% split_states ~ "split"))
+
+master_covid_election_with_dates <- master_covid_election_with_dates %>%
+  mutate(state_win = case_when(state_abb %in% biden_states ~ "biden",
+                               state_abb %in% trump_states ~ "trump",
+                               state_abb %in% split_states ~ "split",
+                               is.na(winner) & state %in% biden_states ~ "biden",
+                               is.na(winner)& state %in% trump_states ~ "trump",
+                               is.na(winner)& state %in% split_states ~ "split"))
+
+#adding total cases per state column
+total_state_cases <- master_covid_election %>%
+  group_by(state_abb) %>%
+  summarise(total_cases = sum(cases))
+
+master_covid_election <- master_covid_election %>%
+  inner_join(total_state_cases, by = "state_abb") %>%
+  mutate(state = factor(state),
+         state_abb = factor(state_abb))
+
+# replacing NAs in winner column with info from state_win
+master_covid_election <- master_covid_election %>%
+  mutate(winner = case_when(is.na(winner) ~ state_win,
+                            !is.na(winner) ~ winner))
+#replacing NAs in other columns with 0's
+master_covid_election[is.na(master_covid_election)] <- 0
+
+
+
+#Writing master dataframes to data folder
+write_csv(master_covid_election, "./data/master_covid_election.csv")
+write_csv(master_covid_election_with_dates, "./data/master_covid_election_with_dates.csv")
 
