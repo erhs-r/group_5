@@ -34,6 +34,12 @@ election_counties_clean <- election_counties %>%
 
 ### Retaining date column and changing date column to Date class
 covid_counties_clean <- covid_counties %>% 
+  filter(date == "2020-11-17") %>% 
+  select(fips, county, state, cases, deaths) %>% 
+  mutate(county = str_to_lower(county),
+         state = str_to_lower(state))
+
+covid_counties_clean_dates <- covid_counties %>% 
   mutate(date = ymd(date),
          county = str_to_lower(county),
          state = str_to_lower(state))
@@ -54,6 +60,11 @@ masks_counties_clean <- masks_counties %>%
 
 #Combining Data Sets
 master_covid_election <- covid_counties_clean %>% 
+  inner_join(population_counties_clean, by = "fips") %>% 
+  inner_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
+  inner_join(masks_counties_clean, by = "fips")
+
+master_covid_election_with_dates <- covid_counties_clean_dates %>% 
   inner_join(population_counties_clean, by = "fips") %>% 
   inner_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips")
