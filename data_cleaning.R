@@ -78,5 +78,5 @@ master_covid_election_with_dates <- covid_counties_clean_dates %>%
 #Writing master dataframes to data folder
 
 write_csv(master_covid_election, "./data/master_covid_election.csv")
-write_csv(master_covid_election_with_dates, "./data/master_covid_election_with_dates")
+write_csv(master_covid_election_with_dates, "./data/master_covid_election_with_dates.csv")
 
