@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 library(tidyverse)
 
 #load data
@@ -50,3 +51,6 @@ covid_master_state %>%
   theme(axis.text.y = element_blank(),
         axis.title.y = element_text(),
         axis.ticks.y = element_blank())
+=======
+
+>>>>>>> 2068e19526c12a3054dc8b6dbeec7f5ccb03247a
