@@ -4,6 +4,19 @@ library(tidyverse)
 covid_counties <- read_csv("data_raw/us-counties.csv")
 election_counties <- read_csv("data_raw/presidential_election_counties.csv")
 masks_counties <- read_csv("data_raw/mask-use-by-county.csv")
+# This is from :
+#https://github.com/balsama/us_counties_data/blob/main/data/counties.csv#L15
+population_counties <- read_csv("data_raw/population_counties.csv")
+
+#-------------------------------------------------------------------------------
+
+#Cleaning up county population data
+population_counties_clean <- population_counties %>% 
+  rename_all(str_to_lower) %>% 
+  mutate(county = str_to_lower(county),
+         state = str_to_lower(state)) %>% 
+  rename(fips = 'fips code') %>% 
+  select(-county, -state)
 
 #Selecting only Trump & Biden results (along with other county identifying columns)
 #Also creating percent_biden column that can be used for gradient stuff
@@ -40,5 +53,15 @@ masks_counties_clean <- masks_counties %>%
 
 #Combining Data Sets
 master_covid_election <- covid_counties_clean %>% 
+  inner_join(population_counties_clean, by = "fips") %>% 
   inner_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips")
+
+# #Just looking at what counties had the highest death rate
+# master_covid_election %>% 
+#   mutate(death_rate = (deaths / population) * 100) %>% 
+#   select(state, county, death_rate) %>% 
+#   arrange(desc(death_rate))
+
+
+
