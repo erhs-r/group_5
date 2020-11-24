@@ -11,28 +11,29 @@ runtime: shiny
 ```{r setup, include=FALSE}
 library(flexdashboard)
 source("data_cleaning.R")
+
+master_covid_election_with_dates$state <- str_to_title(master_covid_election_with_dates$state)
+state_names <- sort(unique(master_covid_election_with_dates$state))
+
 ```
 
 Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-selectInput('xcol', 'State', names(iris))
+selectInput('state_name', label = 'State', choices = state_names, selected = "Colorado")
  
 ```
 
 Column
 -----------------------------------------------------------------------
 
-### K Means
+### Covid cases by state
 
 ```{r}
-palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
-  "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
 
-# Combine the selected variables into a new data frame
 selectedData <- reactive({
-  iris[, c(input$xcol, input$ycol)]
+  master_covid_election_with_dates[input$state_name]
 })
 
 clusters <- reactive({
