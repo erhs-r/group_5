@@ -1,5 +1,6 @@
 library(tidyverse)
 library(tidycensus)
+library(plotly)
 
 #install census api key for future session use
 #census_api_key(key = "9de2c06af35b38352b1a400e0d2b53ecf2488a3f", install = TRUE)
@@ -20,13 +21,13 @@ state_population <- state_population %>%
   mutate(state = str_to_lower(state)) %>%
   select(-GEOID, -variable)
   
-covid_master_statepop <- master_covid_election %>%
+covid_master_statepop <- master_covid_election_with_dates %>%
   left_join(state_population, by = "state") %>%
   mutate(state_abb = factor(state_abb),
          cases_biden = cases * percent_biden,
          cases_trump = cases * (1 - percent_biden))
   
-covid_master_statepop %>%
+fig <- covid_master_statepop %>%
   mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
   ggplot(aes(x = state_abb, y = cases, fill = winner)) +
   geom_bar(position = "dodge", stat = "identity") +
@@ -34,3 +35,4 @@ covid_master_statepop %>%
   theme(axis.text.x = element_text(angle = 90),
         legend.title = element_blank())
  
+ggplotly(fig)
