@@ -1,8 +1,9 @@
 library(tidyverse)
 library(tidycensus)
+library(plotly)
 
 #install census api key for future session use
-census_api_key(key = "9de2c06af35b38352b1a400e0d2b53ecf2488a3f", install = TRUE)
+#census_api_key(key = "9de2c06af35b38352b1a400e0d2b53ecf2488a3f", install = TRUE)
 #run this to load census api key and allow queries of census data
 readRenviron("~/.Renviron")
 #getting state population for 2019
@@ -10,8 +11,8 @@ state_population <- get_estimates( geography = "state", year = "2019", variables
 
 
 #load data
-covid_master <- read_csv("./data/master_covid_election.csv")
-covid_master_dates <- read_csv("./data/master_covid_election_with_dates.csv")
+#covid_master <- read_csv("./data/master_covid_election.csv")
+#covid_master_dates <- read_csv("./data/master_covid_election_with_dates.csv")
 
 #adding state population to covid_master
 state_population <- state_population %>%
@@ -20,12 +21,29 @@ state_population <- state_population %>%
   mutate(state = str_to_lower(state)) %>%
   select(-GEOID, -variable)
   
-covid_master_statepop <- covid_master %>%
+covid_master_statepop <- master_covid_election_with_dates %>%
   left_join(state_population, by = "state") %>%
-  mutate(state_abb = factor(state_abb))
+  mutate(state_abb = factor(state_abb),
+         cases_biden = cases * percent_biden,
+         cases_trump = cases * (1 - percent_biden))
   
-covid_master_statepop %>%
-  mutate(state_abb = fct_reorder(state_abb, cases)) %>%
-  ggplot(aes(x = state_abb, y = cases)) +
-  geom_col() +
-  theme(axis.text.x = element_text(angle = 90))
+fig <- covid_master_statepop %>%
+  mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
+  ggplot(aes(x = date, y = cases, fill = winner)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual(values = c("blue", "red")) +
+  theme(axis.text.x = element_text(angle = 90),
+        legend.title = element_blank())
+
+fig <- covid_master_statepop %>%
+  mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
+  group_by(county) %>%
+  ggplot(aes(x = date, y = cases, fill = state_win)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual(values = c("blue", "purple", "red")) +
+  theme(axis.text.x = element_text(angle = 90),
+        legend.title = element_blank()) +
+  facet_wrap(~state)
+
+ggplotly(fig)
+fig
