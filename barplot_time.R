@@ -2,7 +2,7 @@ library(tidyverse)
 library(tidycensus)
 
 #install census api key for future session use
-census_api_key(key = "9de2c06af35b38352b1a400e0d2b53ecf2488a3f", install = TRUE)
+#census_api_key(key = "9de2c06af35b38352b1a400e0d2b53ecf2488a3f", install = TRUE)
 #run this to load census api key and allow queries of census data
 readRenviron("~/.Renviron")
 #getting state population for 2019
