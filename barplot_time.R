@@ -22,10 +22,12 @@ state_population <- state_population %>%
   
 covid_master_statepop <- covid_master %>%
   left_join(state_population, by = "state") %>%
-  mutate(state_abb = factor(state_abb))
+  mutate(state_abb = factor(state_abb),
+         cases_biden = cases * percent_biden,
+         cases_trump = cases * (1 - percent_biden))
   
 covid_master_statepop %>%
-  mutate(state_abb = fct_reorder(state_abb, cases)) %>%
-  ggplot(aes(x = state_abb, y = cases)) +
-  geom_col() +
+  mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
+  ggplot(aes(x = state_abb, y = cases, fill = winner)) +
+  geom_bar(position = "dodge", stat = "identity") +
   theme(axis.text.x = element_text(angle = 90))
