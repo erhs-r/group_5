@@ -134,6 +134,6 @@ master_covid_election[is.na(master_covid_election)] <- 0
 
 
 #Writing master dataframes to data folder
-write_csv(master_covid_election, "./data/master_covid_election.csv")
-write_csv(master_covid_election_with_dates, "./data/master_covid_election_with_dates.csv")
+#write_csv(master_covid_election, "./data/master_covid_election.csv")
+#write_csv(master_covid_election_with_dates, "./data/master_covid_election_with_dates.csv")
 
