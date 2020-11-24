@@ -1,6 +1,7 @@
 library(tidyverse)
 library(lubridate)
 library(datasets)
+library(tidycensus)
 
 #Initial reading of the main data file
 covid_counties <- read_csv("data_raw/us-counties.csv")
@@ -9,6 +10,15 @@ masks_counties <- read_csv("data_raw/mask-use-by-county.csv")
 # This is from :
 #https://github.com/balsama/us_counties_data/blob/main/data/counties.csv#L15
 population_counties <- read_csv("data_raw/population_counties.csv")
+
+#New York population data was incorrect from above source
+#State population data pulled from census API
+#install census api key for future session use
+#census_api_key(key = "9de2c06af35b38352b1a400e0d2b53ecf2488a3f", install = TRUE)
+#run this to load census api key and allow queries of census data
+readRenviron("~/.Renviron")
+#getting state population for 2019
+state_population <- get_estimates( geography = "state", year = "2019", variables = "POP")
 
 #data from satasets package to add 2 letter state abbr. column
 states = tibble(state_abb = state.abb, state = str_to_lower(state.name)) %>%
@@ -145,7 +155,18 @@ master_covid_election_with_dates <- master_covid_election_with_dates %>%
 master_covid_election[is.na(master_covid_election)] <- 0
 master_covid_election_with_dates[is.na(master_covid_election_with_dates)] <- 0
 
+#adding state population to covid_master
+state_population <- state_population %>%
+  rename(state = NAME,
+         state_population = value) %>%
+  mutate(state = str_to_lower(state)) %>%
+  select(-GEOID, -variable)
 
+master_covid_election_with_dates <- master_covid_election_with_dates %>%
+  left_join(state_population, by = "state") %>%
+  mutate(state_abb = factor(state_abb),
+         cases_biden = cases * percent_biden, #adds cases by proportion biden col
+         cases_trump = cases * (1 - percent_biden)) #adds cases by proportion trump col
 
 #Writing master dataframes to data folder
 #write_csv(master_covid_election, "./data/master_covid_election.csv")
