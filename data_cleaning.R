@@ -123,13 +123,27 @@ master_covid_election <- master_covid_election %>%
   mutate(state = factor(state),
          state_abb = factor(state_abb))
 
+total_state_cases <- master_covid_election_with_dates %>%
+  group_by(state_abb, date) %>%
+  summarise(total_cases = sum(cases))
+
+master_covid_election_with_dates <- master_covid_election_with_dates %>%
+  inner_join(total_state_cases, by = c("state_abb", "date")) %>%
+  mutate(state = factor(state),
+         state_abb = factor(state_abb))
+
 # replacing NAs in winner column with info from state_win
 master_covid_election <- master_covid_election %>%
   mutate(winner = case_when(is.na(winner) ~ state_win,
                             !is.na(winner) ~ as.character(winner)))
 
+master_covid_election_with_dates <- master_covid_election_with_dates %>%
+  mutate(winner = case_when(is.na(winner) ~ state_win,
+                            !is.na(winner) ~ as.character(winner)))
+
 #replacing NAs in other columns with 0's
 master_covid_election[is.na(master_covid_election)] <- 0
+master_covid_election_with_dates[is.na(master_covid_election_with_dates)] <- 0
 
 
 
