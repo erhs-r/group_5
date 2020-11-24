@@ -23,7 +23,7 @@ state_population <- get_estimates( geography = "state", year = "2019", variables
 #data from satasets package to add 2 letter state abbr. column
 states = tibble(state_abb = state.abb, state = str_to_lower(state.name)) %>%
   mutate(state_abb = factor(state_abb))
-  
+
 
 #-------------------------------------------------------------------------------
 
@@ -167,6 +167,12 @@ state_population <- state_population %>%
   select(-GEOID, -variable)
 
 master_covid_election_with_dates <- master_covid_election_with_dates %>%
+  left_join(state_population, by = "state") %>%
+  mutate(state_abb = factor(state_abb),
+         cases_biden = cases * percent_biden, #adds cases by proportion biden col
+         cases_trump = cases * (1 - percent_biden)) #adds cases by proportion trump col
+
+master_covid_election <- master_covid_election %>%
   left_join(state_population, by = "state") %>%
   mutate(state_abb = factor(state_abb),
          cases_biden = cases * percent_biden, #adds cases by proportion biden col
