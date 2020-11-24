@@ -36,7 +36,6 @@ selectedData <- reactive({
   master_covid_election_with_dates[input$state_name,]
 })
 
-
 renderPlot({
   barplot(selectedData())
 })
