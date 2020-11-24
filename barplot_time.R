@@ -35,4 +35,5 @@ fig <- covid_master_statepop %>%
   theme(axis.text.x = element_text(angle = 90),
         legend.title = element_blank())
  
-figggplotly(fig)
+ggplotly(fig)
+fig
