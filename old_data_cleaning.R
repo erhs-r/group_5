@@ -7,6 +7,9 @@ library(tidycensus)
 covid_counties <- read_csv("data_raw/us-counties.csv")
 election_counties <- read_csv("data_raw/presidential_election_counties.csv")
 masks_counties <- read_csv("data_raw/mask-use-by-county.csv")
+# This is from :
+#https://github.com/balsama/us_counties_data/blob/main/data/counties.csv#L15
+population_counties <- read_csv("data_raw/population_counties.csv")
 
 #New York population data was incorrect from above source
 #State population data pulled from census API
@@ -15,8 +18,7 @@ masks_counties <- read_csv("data_raw/mask-use-by-county.csv")
 #run this to load census api key and allow queries of census data
 readRenviron("~/.Renviron")
 #getting state population for 2019
-state_population <- get_estimates( geography = "state", year = "2019", variables = "POP")
-population_counties <- get_estimates( geography = "county", year = "2019", variables = "POP")
+state_population <- get_estimates(geography = "state", year = "2019", variables = "POP")
 
 #data from satasets package to add 2 letter state abbr. column
 states = tibble(state_abb = state.abb, state = str_to_lower(state.name)) %>%
@@ -27,13 +29,11 @@ states = tibble(state_abb = state.abb, state = str_to_lower(state.name)) %>%
 
 #Cleaning up county population data
 population_counties_clean <- population_counties %>% 
-  separate(NAME, c("county", "state"), sep = ", ") %>% 
   rename_all(str_to_lower) %>% 
-  select(-geoid, -variable) %>% 
   mutate(county = str_to_lower(county),
-         state = str_to_lower(state),
-         county = str_replace(county, " county", "")) %>% 
-  rename(population = value)
+         state = str_to_lower(state)) %>% 
+  rename(fips = 'fips code') %>% 
+  select(-county, -state)
 
 #Selecting only Trump & Biden results (along with other county identifying columns)
 #Also creating percent_biden column that can be used for gradient stuff
@@ -79,13 +79,13 @@ masks_counties_clean <- masks_counties %>%
 
 #Combining Data Sets
 master_covid_election <- covid_counties_clean %>% 
-  inner_join(population_counties_clean, by = c("county", "state")) %>% 
+  inner_join(population_counties_clean, by = "fips") %>% 
   left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
 
 master_covid_election_with_dates <- covid_counties_clean_dates %>% 
-  inner_join(population_counties_clean, c("county", "state")) %>% 
+  inner_join(population_counties_clean, by = "fips") %>% 
   left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
@@ -145,9 +145,7 @@ master_covid_election_with_dates <- master_covid_election_with_dates %>%
 # replacing NAs in winner column with info from state_win
 master_covid_election <- master_covid_election %>%
   mutate(winner = case_when(is.na(winner) ~ state_win,
-                            !is.na(winner) ~ as.character(winner)),
-         death_rate = deaths / population,
-         infection_rate = cases / population)
+                            !is.na(winner) ~ as.character(winner)))
 
 master_covid_election_with_dates <- master_covid_election_with_dates %>%
   mutate(winner = case_when(is.na(winner) ~ state_win,
@@ -165,12 +163,6 @@ state_population <- state_population %>%
   select(-GEOID, -variable)
 
 master_covid_election_with_dates <- master_covid_election_with_dates %>%
-  left_join(state_population, by = "state") %>%
-  mutate(state_abb = factor(state_abb),
-         cases_biden = cases * percent_biden, #adds cases by proportion biden col
-         cases_trump = cases * (1 - percent_biden)) #adds cases by proportion trump col
-
-master_covid_election <- master_covid_election %>%
   left_join(state_population, by = "state") %>%
   mutate(state_abb = factor(state_abb),
          cases_biden = cases * percent_biden, #adds cases by proportion biden col
