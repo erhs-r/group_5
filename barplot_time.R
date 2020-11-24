@@ -29,10 +29,10 @@ covid_master_statepop <- master_covid_election_with_dates %>%
   
 fig <- covid_master_statepop %>%
   mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
-  ggplot(aes(x = state_abb, y = cases, fill = winner)) +
+  ggplot(aes(x = date, y = cases, fill = winner)) +
   geom_bar(position = "dodge", stat = "identity") +
   scale_fill_manual(values = c("blue", "red")) +
   theme(axis.text.x = element_text(angle = 90),
         legend.title = element_blank())
  
-ggplotly(fig)
+figggplotly(fig)
