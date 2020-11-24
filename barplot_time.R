@@ -10,8 +10,8 @@ state_population <- get_estimates( geography = "state", year = "2019", variables
 
 
 #load data
-covid_master <- read_csv("./data/master_covid_election.csv")
-covid_master_dates <- read_csv("./data/master_covid_election_with_dates.csv")
+#covid_master <- read_csv("./data/master_covid_election.csv")
+#covid_master_dates <- read_csv("./data/master_covid_election_with_dates.csv")
 
 #adding state population to covid_master
 state_population <- state_population %>%
@@ -20,7 +20,7 @@ state_population <- state_population %>%
   mutate(state = str_to_lower(state)) %>%
   select(-GEOID, -variable)
   
-covid_master_statepop <- covid_master %>%
+covid_master_statepop <- master_covid_election %>%
   left_join(state_population, by = "state") %>%
   mutate(state_abb = factor(state_abb),
          cases_biden = cases * percent_biden,
@@ -30,4 +30,7 @@ covid_master_statepop %>%
   mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
   ggplot(aes(x = state_abb, y = cases, fill = winner)) +
   geom_bar(position = "dodge", stat = "identity") +
-  theme(axis.text.x = element_text(angle = 90))
+  scale_fill_manual(values = c("blue", "red")) +
+  theme(axis.text.x = element_text(angle = 90),
+        legend.title = element_blank())
+ 
