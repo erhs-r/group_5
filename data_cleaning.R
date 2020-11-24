@@ -126,7 +126,9 @@ master_covid_election <- master_covid_election %>%
 # replacing NAs in winner column with info from state_win
 master_covid_election <- master_covid_election %>%
   mutate(winner = case_when(is.na(winner) ~ state_win,
-                            !is.na(winner) ~ as.character(winner)))
+                            !is.na(winner) ~ as.character(winner)),
+         death_rate = deaths / population,
+         infection_rate = cases / population)
 
 #replacing NAs in other columns with 0's
 master_covid_election[is.na(master_covid_election)] <- 0
