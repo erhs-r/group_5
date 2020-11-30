@@ -17,8 +17,12 @@ population_counties <- get_estimates( geography = "county", year = "2019", varia
 #census_api_key(key = "9de2c06af35b38352b1a400e0d2b53ecf2488a3f", install = TRUE)
 #run this to load census api key and allow queries of census data
 readRenviron("~/.Renviron")
+
 #getting state population for 2019
 state_population <- get_estimates( geography = "state", year = "2019", variables = "POP")
+
+#data from fips_code and joining it to population_counties 
+fips_codes <- tibble(fips_codes)
 
 #data from satasets package to add 2 letter state abbr. column
 states = tibble(state_abb = state.abb, state = str_to_lower(state.name)) %>%
@@ -27,15 +31,40 @@ states = tibble(state_abb = state.abb, state = str_to_lower(state.name)) %>%
 
 #-------------------------------------------------------------------------------
 
+#creating 5 digit fips code and join to population_counties 
+#16 counties in fips_code and not in population_counties
+fips_codes_clean <- fips_codes %>%
+  rename_all(str_to_lower) %>% 
+  select(state_name, county, state_code, county_code) %>% 
+  mutate(fips = paste0(state_code, county_code), 
+         county =str_to_lower(county), 
+         state_name  = str_to_lower(state_name),
+         state = state_name) %>% 
+  select(fips, state, county)
+
+#rename specific values
+fips_codes_clean[fips_codes_clean == "petersburg census area"] <- "petersburg borough"
+
+fips_codes_clean[fips_codes_clean == "la salle parish"] <- "lasalle parish"
+
+
 #Cleaning up county population data
+#Join for final population_counties_clean
+
 population_counties_clean <- population_counties %>% 
   separate(NAME, c("county", "state"), sep = ", ") %>% 
   rename_all(str_to_lower) %>% 
   select(-geoid, -variable) %>% 
   mutate(county = str_to_lower(county),
          state = str_to_lower(state),
-         county = str_replace(county, " county", "")) %>% 
-  rename(population = value)
+         population = value) 
+
+#cleaning accents
+population_counties_clean[population_counties_clean == "doña ana county"] <- "dona ana county"
+
+population_counties_clean <- population_counties_clean %>% 
+  left_join(fips_codes_clean, by = c ("county", "state")) %>% 
+  select (-value, -county, -state)
 
 #Selecting only Trump & Biden results (along with other county identifying columns)
 #Also creating percent_biden column that can be used for gradient stuff
@@ -65,6 +94,7 @@ covid_counties_clean_dates <- covid_counties %>%
          county = str_to_lower(county),
          state = str_to_lower(state))
 
+
 # CHECKING TO MAKE SURE CUMULATIVE AND NOT ACTIVE CASES
 # covid_counties %>% 
 #   filter(fips == "04013") %>% 
@@ -79,18 +109,21 @@ masks_counties_clean <- masks_counties %>%
   rename(fips = countyfp) %>% 
   mutate(mask_percent = frequently + always)
 
-#Combining Data Sets
+#Combining Data Sets (ALASKA does not have accurate county population information)
+#We have 40 counties in Alaska with election data, but no county population data 
 master_covid_election <- covid_counties_clean %>% 
-  inner_join(population_counties_clean, by = c("county", "state")) %>% 
+  inner_join(population_counties_clean, by = "fips") %>% 
   left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
 
 master_covid_election_with_dates <- covid_counties_clean_dates %>% 
-  inner_join(population_counties_clean, c("county", "state")) %>% 
+  inner_join(population_counties_clean, c("fips")) %>% 
   left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
+
+sum(is.na(master_covid_election_with_dates$fips))
 
 # #Just looking at what counties had the highest death rate
 # master_covid_election %>% 
@@ -181,4 +214,3 @@ master_covid_election <- master_covid_election %>%
 #Writing master dataframes to data folder
 #write_csv(master_covid_election, "./data/master_covid_election.csv")
 #write_csv(master_covid_election_with_dates, "./data/master_covid_election_with_dates.csv")
-
