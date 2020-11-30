@@ -21,21 +21,21 @@ state_population <- state_population %>%
   mutate(state = str_to_lower(state)) %>%
   select(-GEOID, -variable)
   
-covid_master_statepop <- master_covid_election_with_dates %>%
+master_covid_election_with_dates <- master_covid_election_with_dates %>%
   left_join(state_population, by = "state") %>%
   mutate(state_abb = factor(state_abb),
          cases_biden = cases * percent_biden,
          cases_trump = cases * (1 - percent_biden))
   
-fig <- covid_master_statepop %>%
-  mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
-  ggplot(aes(x = date, y = cases, fill = winner)) +
-  geom_bar(position = "dodge", stat = "identity") +
-  scale_fill_manual(values = c("blue", "red")) +
-  theme(axis.text.x = element_text(angle = 90),
-        legend.title = element_blank())
+# fig <- covid_master_statepop %>%
+#   mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
+#   ggplot(aes(x = date, y = cases, fill = winner)) +
+#   geom_bar(position = "dodge", stat = "identity") +
+#   scale_fill_manual(values = c("blue", "red")) +
+#   theme(axis.text.x = element_text(angle = 90),
+#         legend.title = element_blank())
 
-fig <- covid_master_statepop %>%
+fig <- master_covid_election_with_dates %>%
   mutate(state_abb = fct_reorder(state_abb, state_population)) %>%
   group_by(county) %>%
   ggplot(aes(x = date, y = cases, fill = state_win)) +

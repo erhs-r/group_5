@@ -1,9 +1,8 @@
-<<<<<<< HEAD
 library(tidyverse)
 
 #load data
-covid_master <- read_csv("./data/master_covid_election.csv")
-covid_master_dates <- read_csv("./data/master_covid_election_with_dates.csv")
+# covid_master <- read_csv("./data/master_covid_election.csv")
+# covid_master_dates <- read_csv("./data/master_covid_election_with_dates.csv")
 
 # #states won biden or trump. source = https://www.270towin.com/2020-election-results-live/
 # biden_states <- c("WA", "OR", "CA", "NV", "AZ", "NM", "CO", "HI", "MN", "WI", 
@@ -41,7 +40,7 @@ covid_master_dates <- read_csv("./data/master_covid_election_with_dates.csv")
 # covid_master_state[is.na(covid_master_state)] <- 0
 
 #plot
-covid_master_state %>%
+master_covid_election %>%
   ggplot(aes(size = cases)) +
   geom_point(aes(x = state_win, y = winner, color = winner), 
              position = position_jitter(width = .3, height = .5),
@@ -51,6 +50,3 @@ covid_master_state %>%
   theme(axis.text.y = element_blank(),
         axis.title.y = element_text(),
         axis.ticks.y = element_blank())
-=======
-
->>>>>>> 2068e19526c12a3054dc8b6dbeec7f5ccb03247a
