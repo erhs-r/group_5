@@ -4,7 +4,7 @@ library(purrr)
 library(tigris)
 library(viridis)
 
-master_covid_election <- read_csv("data/master_covid_election.csv")
+source("data_cleaning.R")
 
 counties <- counties(state = c("WA", "OR", "CA", "NV", "AZ", "NM", "CO", "MN", "WI", 
                                "IL", "MI", "GA", "PA", "VA", "NY", "VT", "NH", "MA", "RI", 
