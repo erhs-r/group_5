@@ -1,8 +1,0 @@
-# pack-refs with: peeled fully-peeled sorted 
-204fa23ea941364f931f403040d4000552386ac3 refs/heads/Kai_data_clean
-753cf57f96115314afeb0ecd5f7d65c8f1f4ca27 refs/heads/Linda_cleaning
-b4a00d1d8e708e732b28d5ff09fd7da992f7511f refs/heads/ky_branch
-fb189a203d604a4ad93cfe8f77813eec53b2fa20 refs/heads/main
-38eec1acdac76a07c7f4955fb40df0ddeb6c21b0 refs/heads/ng_test_group_5
-38eec1acdac76a07c7f4955fb40df0ddeb6c21b0 refs/pull/2/head
-204fa23ea941364f931f403040d4000552386ac3 refs/pull/3/head
