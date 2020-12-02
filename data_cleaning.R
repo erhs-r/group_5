@@ -190,8 +190,8 @@ master_covid_election <- master_covid_election %>%
                             !is.na(winner) ~ as.character(winner)),
          death_rate_per_100k = (deaths / population) * 100000,
          infection_rate_per_100k = (cases / population) * 100000,
-         death_rate = (deaths / population),
-         infection_rate = (cases / population))
+         death_rate = str_trunc((deaths / population) * 100, 4, ellipsis = ""),
+         infection_rate = str_trunc((cases / population) * 100, 4, ellipsis = ""))
 
 master_covid_election_with_dates <- master_covid_election_with_dates %>%
   mutate(winner = case_when(is.na(winner) ~ state_win,
