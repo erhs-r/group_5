@@ -39,10 +39,8 @@ dygraph(plot_data[,c(1,3)],
            label = "Trump Counties") %>%
   dyOptions(stackedGraph = TRUE, colors = c("blue", "red")) %>%
   dyRangeSelector(height = 20) %>%
-  dyLegend(show = "always", width = 400)
-
-
-dygraph(plot_data[,c(2,4)],
+  dyLegend(show = "always", width = 400) %>%
+tagList(dygraph(plot_data[,c(2,4)],
         main = "County Death Rate Average by 2020 Presidential Election Winner",
         ylab = "Death Rate / 100k People") %>%
   dySeries("mean_death_100k_biden", 
@@ -51,4 +49,6 @@ dygraph(plot_data[,c(2,4)],
            label = "Trump Counties") %>%
   dyOptions(stackedGraph = TRUE, colors = c("blue", "red")) %>%
   dyRangeSelector(height = 20) %>%
-  dyLegend(show = "always", width = 400)
+  dyLegend(show = "always", width = 400)) %>%
+  browsable()
+
