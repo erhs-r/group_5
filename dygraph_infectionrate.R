@@ -1,8 +1,8 @@
+source("data_cleaning.R")
+
 library(tidyverse)
 library(dygraphs)
 library(xts)
-
-source("data_cleaning.R")
 
 #Add county,ST label column for top infected county line labels
 master_covid_election_with_dates <- master_covid_election_with_dates %>%
@@ -151,7 +151,7 @@ plot_data_infect <- xts(plot_data_infect[,-1], order.by = plot_data_infect$date)
 plot_data_death <- xts(plot_data_death[,-1], order.by = plot_data_death$date)
 
 #generating infection dygraph
-dygraph(data = plot_data_infect,
+dy_infect <- dygraph(data = plot_data_infect,
         main = "County Infection Rate by 2020 Presidential Election Winner",
         ylab = "Infection Rate / 100k People") %>%
   dySeries("mean_infect_100k_biden", 
@@ -185,7 +185,7 @@ dygraph(data = plot_data_infect,
 
 
 #generating death dygraph
-dygraph(data = plot_data_death,
+dy_death <- dygraph(data = plot_data_death,
         main = "County Death Rate by 2020 Presidential Election Winner",
         ylab = "Death Rate / 100k People") %>%
   dySeries("mean_death_100k_biden", 
