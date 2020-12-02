@@ -1,6 +1,7 @@
 library(tidyverse)
 library(dygraphs)
 library(xts)
+library(htmltools)
 
 source("data_cleaning.R")
 
