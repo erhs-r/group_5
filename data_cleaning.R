@@ -112,7 +112,7 @@ covid_counties_clean_dates <- covid_counties %>%
 masks_counties_clean <- masks_counties %>% 
   rename_all(str_to_lower) %>% 
   rename(fips = countyfp) %>% 
-  mutate(mask_percent = frequently + always)
+  mutate(mask_percent = str_trunc((frequently + always)*100, 4, ellipsis = ""))
 
 #Combining Data Sets (ALASKA does not have accurate county population information)
 #We have 40 counties in Alaska with election data, but no county population data 

@@ -16,13 +16,14 @@ counties <- counties(state = c("WA", "OR", "CA", "NV", "AZ", "NM", "CO", "MN", "
 counties_data <- counties %>% 
   inner_join(master_covid_election, by = "fips") %>% 
   mutate(winner = str_to_title(winner),
-         popup_text = paste("<b>State:</b>", str_to_title(state), "<br>",
-                            "<b>County:</b>", str_to_title(county), "<br>"))
+         popup_text = paste("<b>", str_to_title(state), "</b>, ", "<b>", str_to_title(county), "</b><br>",
+                            "Infection Rate: ", paste((infection_rate*100), "%"), "<br>",
+                            "Mask Usage: ", paste((mask_percent*100), "%")))
 
 pal <- colorFactor(c("#2E3FD5", "#E7191C"), counties_data$winner)
 
 leaflet() %>% 
-  setView(lng = -110, lat = 40, zoom = 3) %>% 
+  setView(lng = -110, lat = 40, zoom = 3.3) %>% 
   addTiles() %>% 
   addPolygons(data = counties_data, color = "#000000", weight = 0.5,
               fillColor = ~ pal(winner), popup = ~ popup_text) %>% 
