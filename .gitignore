@@ -4,3 +4,4 @@
 .Ruserdata
 data/master_covid_election.csv
 data/master_covid_election_with_dates.csv
+data_cleaning_1129_LK.R
