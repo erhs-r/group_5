@@ -84,8 +84,6 @@ election_counties_clean <- election_counties %>%
   rename(county = name) %>%
   filter(state != "district of-columbia")
 
-election_counties_clean[election_counties_clean == "dona ana"] <- "doña ana"
-
 ### Retaining date column and changing date column to Date class
 covid_counties_clean <- covid_counties %>% 
   filter(date == "2020-11-17") %>% 
@@ -120,6 +118,8 @@ master_covid_election <- covid_counties_clean %>%
   left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
+
+master_covid_election[master_covid_election== "doña ana"]<-"dona ana" 
 
 master_covid_election_with_dates <- covid_counties_clean_dates %>% 
   inner_join(population_counties_clean, c("fips")) %>% 
