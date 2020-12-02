@@ -1,0 +1,52 @@
+---
+title: "Covid-19 and Election Data"
+output: flexdashboard::flex_dashboard
+---
+Dashboard {data-orientation=rows}
+=====================================   
+
+```{r setup, include = FALSE}
+
+```
+
+
+
+   
+Row {data-height=600}
+-------------------------------------
+
+### Chart 1
+
+```{r}
+```
+
+Row {data-height=400}
+-------------------------------------
+   
+### Chart 2
+
+```{r}
+```   
+    
+### Chart 3
+
+```{r}
+```
+
+Dashboard Descriptions
+=====================================  
+    
+-------------------------------------
+    
+### Chart 1
+    
+Some comment 
+   
+### Chart 2
+
+some comment
+
+### Chart 3
+    
+Some comment
+
