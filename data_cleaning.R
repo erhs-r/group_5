@@ -66,6 +66,9 @@ population_counties_clean <- population_counties_clean %>%
   left_join(fips_codes_clean, by = c ("county", "state")) %>% 
   select (-value, -county, -state)
 
+
+  
+
 #Selecting only Trump & Biden results (along with other county identifying columns)
 #Also creating percent_biden column that can be used for gradient stuff
 election_counties_clean <- election_counties %>% 
@@ -81,6 +84,7 @@ election_counties_clean <- election_counties %>%
   rename(county = name) %>%
   filter(state != "district of-columbia")
 
+election_counties_clean[election_counties_clean == "dona ana"] <- "doña ana"
 
 ### Retaining date column and changing date column to Date class
 covid_counties_clean <- covid_counties %>% 
