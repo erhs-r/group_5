@@ -16,18 +16,26 @@ counties <- counties(state = c("WA", "OR", "CA", "NV", "AZ", "NM", "CO", "MN", "
 counties_data <- counties %>% 
   inner_join(master_covid_election, by = "fips") %>% 
   mutate(winner = str_to_title(winner),
-         popup_text = paste("<b>", str_to_title(state), "</b>, ", "<b>", str_to_title(county), "</b><br>",
-                            "Infection Rate: ", paste((infection_rate*100), "%"), "<br>",
-                            "Mask Usage: ", paste((mask_percent*100), "%")))
+         popup_text = paste(paste0("<b>", str_to_title(county), ",</b>"), "<b>", state_abb, "</b><br>",
+                            "Infection Rate: ", paste0((infection_rate), "%"), "<br>",
+                            "Mask Usage: ", paste0((mask_percent), "%")))
 
-pal <- colorFactor(c("#2E3FD5", "#E7191C"), counties_data$winner)
+states <- states(cb = TRUE, class = "sf") %>% 
+  select(STUSPS, geometry) %>% 
+  rename(state_abb = STUSPS) %>% 
+  filter(state_abb %in% counties_data$state_abb)
+
+pal <- colorFactor(c("blue", "red"), counties_data$winner)
 
 leaflet() %>% 
-  setView(lng = -110, lat = 40, zoom = 3.3) %>% 
-  addTiles() %>% 
-  addPolygons(data = counties_data, color = "#000000", weight = 0.5,
-              fillColor = ~ pal(winner), popup = ~ popup_text) %>% 
+  setView(lng = -100, lat = 40, zoom = 4) %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  addPolygons(data = counties_data, color = "black", 
+              smoothFactor = 0.5, weight = 0.5,
+              fillColor = ~ pal(winner), fillOpacity = 1,
+              highlightOptions = highlightOptions(color = "white", weight = 2, bringToFront = TRUE),
+              popup = ~ popup_text) %>% 
+  addPolylines(data = states, color = "black", opacity = 1, weight = 1, smoothFactor = 0.5) %>%
   addLegend(data = counties_data, pal = pal, values = ~ winner,
-            title = "Winner")
+            title = "Winner", opacity = 1)
   
-
