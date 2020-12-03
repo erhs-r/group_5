@@ -3,10 +3,13 @@ library(lubridate)
 library(datasets)
 library(tidycensus)
 
-#Initial reading of the main data file
+#Initial reading of the main data file 
+#From NY Times Github (as of 12/3/2020)
 covid_counties <- read_csv("data_raw/us-counties.csv")
-election_counties <- read_csv("data_raw/presidential_election_counties.csv")
+#From NY Times Github (as of July 2020)
 masks_counties <- read_csv("data_raw/mask-use-by-county.csv")
+#From: 
+election_counties <- read_csv("data_raw/presidential_election_counties.csv")
 # This is from :
 #https://github.com/balsama/us_counties_data/blob/main/data/counties.csv#L15
 population_counties <- get_estimates( geography = "county", year = "2019", variables = "POP")
@@ -190,8 +193,8 @@ master_covid_election <- master_covid_election %>%
                             !is.na(winner) ~ as.character(winner)),
          death_rate_per_100k = (deaths / population) * 100000,
          infection_rate_per_100k = (cases / population) * 100000,
-         death_rate = str_trunc((deaths / population) * 100, 4, ellipsis = ""),
-         infection_rate = str_trunc((cases / population) * 100, 4, ellipsis = ""))
+         death_rate = as.numeric(str_trunc((deaths / population) * 100, 4, ellipsis = "")),
+         infection_rate = as.numeric(str_trunc((cases / population) * 100, 4, ellipsis = "")))
 
 master_covid_election_with_dates <- master_covid_election_with_dates %>%
   mutate(winner = case_when(is.na(winner) ~ state_win,
