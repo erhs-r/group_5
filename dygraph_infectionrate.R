@@ -1,8 +1,4 @@
-source("data_cleaning.R")
-
-library(tidyverse)
-library(dygraphs)
-library(xts)
+####data specific to Chart 2 ####
 
 #Add county,ST label column for top infected county line labels
 master_covid_election_with_dates <- master_covid_election_with_dates %>%
@@ -36,14 +32,14 @@ make_top_counties_df <- function(county_st_vect, df, candidate, i_or_d) {
   #df = dataframe with column containing strings that match to those in county_st
   #candidate = "biden" or "trump"
   #i_or_d = "infect" or "death"
-  #outputs lsit of dataframes filtered only to a single element in county_st_vect named data_list
+  #outputs list of dataframes filtered only to a single element in county_st_vect named data_list
   dfs_list <- list()
   names <- c()
   for (i in 1:length(county_st_vect)){
     dfs_list[[i]] <- df[df$county_st == county_st_vect[i], ]
     names <- c(names, str_replace(paste("df", 
-                                county_st_vect[i], 
-                                sep = "_"), pattern = ", ", "_"))
+                                        county_st_vect[i], 
+                                        sep = "_"), pattern = ", ", "_"))
   }
   names <- str_replace_all(names, " ", "_")
   df_names <- c()
@@ -53,7 +49,7 @@ make_top_counties_df <- function(county_st_vect, df, candidate, i_or_d) {
   names(dfs_list) <- df_names
   dfs_list <- map(dfs_list, ~select(.x, date, infection_rate_per_100k, death_rate_per_100k))
   list2env(dfs_list, envir = .GlobalEnv)
- }
+}
 
 #creating dataframes for individual counties with highest infection and death rates that went trump or biden
 make_top_counties_df(biden_highest_death, master_covid_election_with_dates, "biden", "death")
@@ -135,7 +131,7 @@ plot_data_biden <- plot_data %>%
 plot_data <- plot_data_biden %>%
   full_join(plot_data_trump, by = "date") %>%
   full_join(top_infect_death, by = "date")
-  
+
 #setting NA values to 0
 plot_data[is.na(plot_data)] <- 0
 
@@ -152,8 +148,8 @@ plot_data_death <- xts(plot_data_death[,-1], order.by = plot_data_death$date)
 
 #generating infection dygraph
 dy_infect <- dygraph(data = plot_data_infect,
-        main = "County Infection Rate by 2020 Presidential Election Winner",
-        ylab = "Infection Rate / 100k People") %>%
+                     main = "County Infection Rate by 2020 Presidential Election Winner",
+                     ylab = "Infection Rate / 100k People") %>%
   dySeries("mean_infect_100k_biden", 
            label = "Biden Counties Avg.",
            fillGraph = TRUE,
@@ -161,8 +157,8 @@ dy_infect <- dygraph(data = plot_data_infect,
   dySeries("infect_100k_biden_df_Buffalo_SD_biden_infect", 
            label = "Buffalo, SD",
            color = "blue") %>%
-  dySeries("infect_100k_biden_df_Issaquena_MS_biden_infect", 
-           label = "Issaquena, MS",
+  dySeries("infect_100k_biden_df_East_Carroll_LA_biden_infect",
+           label = "East Carroll, LA",
            color = "blue") %>%
   dySeries("infect_100k_biden_df_Lee_AR_biden_infect", 
            label = "Lee, AR",
@@ -186,8 +182,8 @@ dy_infect <- dygraph(data = plot_data_infect,
 
 #generating death dygraph
 dy_death <- dygraph(data = plot_data_death,
-        main = "County Death Rate by 2020 Presidential Election Winner",
-        ylab = "Death Rate / 100k People") %>%
+                    main = "County Death Rate by 2020 Presidential Election Winner",
+                    ylab = "Death Rate / 100k People") %>%
   dySeries("mean_death_100k_biden", 
            label = "Biden Counties Avg.",
            fillGraph = TRUE,
@@ -216,5 +212,3 @@ dy_death <- dygraph(data = plot_data_death,
            color = "red") %>%
   dyRangeSelector(height = 20) %>%
   dyLegend(show = "follow", width = 400) 
-
-
