@@ -392,8 +392,12 @@ Row {data-height=600}
 -------------------------------------
 
 ### Chart 1
+```{r include=FALSE}
+source("us_map.R")
+```
 
 ```{r}
+us_map
 ```
 
 Row {data-height=400}
