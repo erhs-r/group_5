@@ -156,28 +156,35 @@ dy_infect <- dygraph(data = plot_data_infect,
            color = "blue") %>%
   dySeries("infect_100k_biden_df_Buffalo_SD_biden_infect", 
            label = "Buffalo, SD",
-           color = "blue") %>%
+           color = "blue",
+           strokePattern = "dotted") %>%
   dySeries("infect_100k_biden_df_East_Carroll_LA_biden_infect",
            label = "East Carroll, LA",
-           color = "blue") %>%
+           color = "blue",
+           strokePattern = "dotted") %>%
   dySeries("infect_100k_biden_df_Lee_AR_biden_infect", 
            label = "Lee, AR",
-           color = "blue") %>%
+           color = "blue",
+           strokePattern = "dotted") %>%
   dySeries("mean_infect_100k_trump", 
            label = "Trump Counties Avg.",
            fillGraph = TRUE,
            color = "red") %>%
   dySeries("infect_100k_trump_df_Lake_TN_trump_infect", 
            label = "Lake, TN",
-           color = "red") %>%
+           color = "red",
+           strokePattern = "dotted") %>%
   dySeries("infect_100k_trump_df_Lincoln_AR_trump_infect", 
            label = "Lincoln, AR",
-           color = "red") %>%
+           color = "red",
+           strokePattern = "dotted") %>%
   dySeries("infect_100k_trump_df_Trousdale_TN_trump_infect", 
            label = "Trousdale, TN",
-           color = "red") %>%
+           color = "red",
+           strokePattern = "dotted") %>%
   dyRangeSelector(height = 20) %>%
-  dyLegend(show = "follow", width = 400) 
+  dyLegend(show = "auto", width = 175, labelsSeparateLines = TRUE) %>%
+  dyCSS("dy_legend_position.css")
 
 
 #generating death dygraph
@@ -211,4 +218,4 @@ dy_death <- dygraph(data = plot_data_death,
            label = "Perkins, NE",
            color = "red") %>%
   dyRangeSelector(height = 20) %>%
-  dyLegend(show = "follow", width = 400) 
+  dyLegend(show = "follow", width = 400, labelsSeparateLines = TRUE) 
