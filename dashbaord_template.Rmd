@@ -24,7 +24,7 @@ population_counties <- get_estimates( geography = "county", year = "2019", varia
 #New York population data was incorrect from above source
 #State population data pulled from census API
 #install census api key for future session use
-#census_api_key(key = "9de2c06af35b38352b1a400e0d2b53ecf2488a3f", install = TRUE)
+#census_api_key(key = "..........", install = TRUE)
 #run this to load census api key and allow queries of census data
 readRenviron("~/.Renviron")
 
@@ -267,7 +267,7 @@ make_top_counties_df <- function(county_st_vect, df, candidate, i_or_d) {
   #df = dataframe with column containing strings that match to those in county_st
   #candidate = "biden" or "trump"
   #i_or_d = "infect" or "death"
-  #outputs lsit of dataframes filtered only to a single element in county_st_vect named data_list
+  #outputs list of dataframes filtered only to a single element in county_st_vect named data_list
   dfs_list <- list()
   names <- c()
   for (i in 1:length(county_st_vect)){
