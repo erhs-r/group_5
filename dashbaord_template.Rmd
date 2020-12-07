@@ -233,6 +233,10 @@ master_covid_election <- master_covid_election %>%
          cases_biden = cases * percent_biden, #adds cases by proportion biden col
          cases_trump = cases * (1 - percent_biden)) #adds cases by proportion trump col
 
+
+```
+
+```{r chart2 cleaning, include=FALSE}
 ####data specific to Chart 2 ####
 
 #Add county,ST label column for top infected county line labels
@@ -383,7 +387,6 @@ plot_data_death <- xts(plot_data_death[,-1], order.by = plot_data_death$date)
 ```
 
 
-
    
 Row {data-height=600}
 -------------------------------------
@@ -410,8 +413,8 @@ dy_infect <- dygraph(data = plot_data_infect,
   dySeries("infect_100k_biden_df_Buffalo_SD_biden_infect", 
            label = "Buffalo, SD",
            color = "blue") %>%
-  dySeries("infect_100k_biden_df_Issaquena_MS_biden_infect", 
-           label = "Issaquena, MS",
+  dySeries("infect_100k_biden_df_East_Carroll_LA_biden_infect",
+           label = "East Carroll, LA",
            color = "blue") %>%
   dySeries("infect_100k_biden_df_Lee_AR_biden_infect", 
            label = "Lee, AR",
