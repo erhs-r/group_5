@@ -285,9 +285,12 @@ Dashboard Descriptions
     
 -------------------------------------
     
-### Chart 1
+### US Map
     
-Some comment 
+This map shows all the counties in the US colored by which ever presidential candidate received the majority of votes within the county, and shaded by either the COVID-19 infection rate or COVID-19 death rate for each county. Therefore, dark red counties indicate a Trump victory where there is also a high infection/death rate. Dark blue counties indicate a Biden victory with a high infection/death rate. Light Red for a Trump victory and low infection/death rate, and light blue for a Biden victory with a low infection/death rate.
+This map is interactive, so you can pan around and zoom in to find specific counties, toggle between showing the infection and death rate, and also turn the election results on and off.
+
+We got our data from the [NY Times](https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html)
    
 ### County Infection Rate by 2020 Presidential Election Winner
 
