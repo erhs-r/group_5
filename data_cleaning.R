@@ -85,7 +85,10 @@ election_counties_clean <- election_counties %>%
          winner = factor(winner),
          state = str_replace(state, "-", " ")) %>% 
   rename(county = name) %>%
-  filter(state != "district of-columbia")
+  filter(state != "district of-columbia") %>% 
+  select(-county, -state, -results_absentee_bidenj, -results_absentee_trumpd,
+         -results_bidenj, -results_trumpd)
+
 
 election_counties_clean[election_counties_clean== "dona ana"]<- "doña ana" 
 
@@ -115,13 +118,14 @@ covid_counties_clean_dates <- covid_counties %>%
 masks_counties_clean <- masks_counties %>% 
   rename_all(str_to_lower) %>% 
   rename(fips = countyfp) %>% 
-  mutate(mask_percent = str_trunc((frequently + always)*100, 4, ellipsis = ""))
+  mutate(mask_percent = str_trunc((frequently + always)*100, 4, ellipsis = "")) %>% 
+  select(fips, mask_percent)
 
 #Combining Data Sets (ALASKA does not have accurate county population information)
 #We have 40 counties in Alaska with election data, but no county population data 
 master_covid_election <- covid_counties_clean %>% 
   inner_join(population_counties_clean, by = "fips") %>% 
-  left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
+  left_join(election_counties_clean, by = "fips") %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
 
@@ -129,7 +133,7 @@ master_covid_election[master_covid_election== "doña ana"]<-"dona ana"
 
 master_covid_election_with_dates <- covid_counties_clean_dates %>% 
   inner_join(population_counties_clean, c("fips")) %>% 
-  left_join(election_counties_clean, by = c("fips", "county", "state")) %>% 
+  left_join(election_counties_clean, by = c("fips")) %>% 
   inner_join(masks_counties_clean, by = "fips") %>%
   inner_join(states, by = "state")
 
