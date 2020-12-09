@@ -240,7 +240,7 @@ master_covid_election <- master_covid_election %>%
 Row {data-height=600}
 -------------------------------------
 
-### Chart 1
+### US Map, Infection & Death Rate with Election Overlay
 ```{r include=FALSE}
 source("us_map.R")
 ```
