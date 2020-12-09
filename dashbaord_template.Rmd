@@ -260,7 +260,7 @@ Row {data-height=400}
 -------------------------------------
    
 ### Infection rate per 100k people
-*Dashed lines represnt the 3 counties with the highest rates of infection that voted for either Trump or Biden*
+*Dashed lines represent the 3 counties with the highest rates of infection that voted for either Trump or Biden*
 *Filled lines are the average infection rates for counties that voted for either Trump or Biden*
 ```{r chart2 cleaning, include=FALSE}
 source("dygraph_infectionrate.R")
