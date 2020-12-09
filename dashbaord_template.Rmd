@@ -12,6 +12,7 @@ library(datasets)
 library(tidycensus)
 library(dygraphs)
 library(xts)
+library(ggbeeswarm)
 
 #Initial reading of the main data file
 covid_counties <- read_csv("data_raw/us-counties.csv")
