@@ -16,12 +16,31 @@ worst_case_state <- masks %>%
   select(state,state_infection_rate) %>% 
   unique() %>% 
   ungroup() %>% 
-  top_n(3, wt = state_infection_rate) %>% 
+  top_n(1, wt = state_infection_rate) %>% 
   pull(state)
+
+middle_case_state <-  masks %>%  
+  group_by(state) %>%
+  select(state,state_infection_rate) %>% 
+  arrange(desc(state_infection_rate)) %>% 
+  unique() %>% 
+  ungroup() %>% 
+  slice(25) %>% 
+  pull(state)
+
+best_case_state <-  masks %>%  
+  group_by(state) %>%
+  select(state,state_infection_rate) %>% 
+  unique() %>% 
+  ungroup() %>% 
+  top_n(-1, wt = state_infection_rate) %>% 
+  pull(state)
+
+compare_states <- c(worst_case_state, best_case_state, middle_case_state)
 
 #cleaned data for creating plot
 state_mask <- masks %>%
-  subset(state %in% worst_case_state) %>% 
+  subset(state %in% compare_states) %>% 
   mutate (state = str_to_title(state), 
           winner = str_to_title(winner),
           county = str_to_title(county))
