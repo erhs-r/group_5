@@ -248,6 +248,13 @@ source("us_map.R")
 us_map
 ```
 
+
+Plots
+=====================================  
+    
+-------------------------------------
+
+
 Row {data-height=400}
 -------------------------------------
    
@@ -260,10 +267,17 @@ source("dygraph_infectionrate.R")
 dy_infect
 ```   
     
-### Chart 3
+### Mask-wearing adherence for the three highest COVID-19 cases by state and its counties
+
+*Circle size represents COVID-19 cases per 100K people*
+```{r mask, include= FALSE}
+source ("mask_final.R")
+```
 
 ```{r}
+mask_plot
 ```
+
 
 Dashboard Descriptions
 =====================================  
