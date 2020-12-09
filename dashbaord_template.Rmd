@@ -2,7 +2,7 @@
 title: "Covid-19 and Election Data"
 output: flexdashboard::flex_dashboard
 ---
-Dashboard {data-orientation=rows}
+Map {data-orientation=rows}
 =====================================   
 
 ```{r setup, include = FALSE}
