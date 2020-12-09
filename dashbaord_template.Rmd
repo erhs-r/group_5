@@ -289,9 +289,9 @@ Dashboard Descriptions
     
 Some comment 
    
-### Chart 2
+### County Infection Rate by 2020 Presidential Election Winner
 
-some comment
+The COVID-19 infection rate per 100k people was calculated for each county in the United States. Dotted lines represent the 3 counties with the highest infection rates that voted either for Biden (blue) or Trump (red) in the 2020 Presidential Election. Solid lines are the average or county infection rates per 100k people colored by voter preference.
 
 ### Chart 3
     
