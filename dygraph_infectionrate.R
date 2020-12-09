@@ -182,7 +182,7 @@ dy_infect <- dygraph(data = plot_data_infect,
            color = "red",
            strokePattern = "dotted") %>%
   dyRangeSelector(height = 20) %>%
-  dyLegend(show = "auto", width = 175, labelsSeparateLines = TRUE) %>%
+  dyLegend(show = "auto", width = 200, labelsSeparateLines = TRUE) %>%
   dyCSS("dy_legend_position.css")
 
 
