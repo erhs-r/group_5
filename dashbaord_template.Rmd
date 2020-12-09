@@ -240,7 +240,7 @@ master_covid_election <- master_covid_election %>%
 Row {data-height=600}
 -------------------------------------
 
-### US Map, Infection & Death Rate with Election Overlay
+### **US Map, Infection & Death Rate with Election Overlay**
 ```{r include=FALSE}
 source("us_map.R")
 ```
@@ -258,7 +258,7 @@ Plots
 
 Row {data-height=400}
 -------------------------------------
-### County Infection Rate by 2020 Presidential Election Winner
+### **County Infection Rate by 2020 Presidential Election Winner**
  
 ```{r chart2 cleaning, include=FALSE}
 source("dygraph_infectionrate.R")
@@ -268,7 +268,7 @@ source("dygraph_infectionrate.R")
 dy_infect
 ```   
     
-### Mask-wearing adherence for the three highest COVID-19 cases by state and its counties
+### **Mask-wearing adherence for the three highest COVID-19 cases by state and its counties**
 
 *Circle size represents COVID-19 cases per 100K people*
 ```{r mask, include= FALSE}
