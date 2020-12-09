@@ -148,7 +148,6 @@ plot_data_death <- xts(plot_data_death[,-1], order.by = plot_data_death$date)
 
 #generating infection dygraph
 dy_infect <- dygraph(data = plot_data_infect,
-                     main = "County Infection Rate by 2020 Presidential Election Winner",
                      ylab = "Infection Rate / 100k People") %>%
   dySeries("mean_infect_100k_biden", 
            label = "Biden Counties Avg.",
