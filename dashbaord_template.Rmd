@@ -1,5 +1,5 @@
 ---
-title: "Covid-19 and Election Data"
+title: "Coronavirus and Election Data"
 output: flexdashboard::flex_dashboard
 ---
 Map {data-orientation=rows}
@@ -252,13 +252,13 @@ us_map
 
 Plots
 =====================================  
-    
+
+row {date-height= 400}    
 -------------------------------------
 
 
-Row {data-height=400}
--------------------------------------
 ### **County Infection Rate by 2020 Presidential Election Winner**
+
  
 ```{r chart2 cleaning, include=FALSE}
 source("dygraph_infectionrate.R")
@@ -268,9 +268,13 @@ source("dygraph_infectionrate.R")
 dy_infect
 ```   
     
-### **Mask-wearing adherence for the three highest COVID-19 cases by state and its counties**
 
-*Circle size represents COVID-19 cases per 100K people*
+###  **Comparing Mask-wearing Adherence for Three State and its Counties**
+
+##### **States are in order of highest, middle, and lowest number of Coronavirus cases per 100000 people.** 
+
+##### *Circle size represents COVID-19 cases per 100K people.*
+
 ```{r mask, include= FALSE}
 source ("mask_final.R")
 ```
@@ -279,25 +283,69 @@ source ("mask_final.R")
 mask_plot
 ```
 
+...
 
-Dashboard Descriptions
+Dashboard Descriptions 
 =====================================  
     
 -------------------------------------
+
+column 
+-------------------------------------
+### **Data Sources:**
+
+##### **New York Times** 
+
+- [COVID-19](https://github.com/nytimes/covid-19-data)
+    +
+    +
+- [Mask-use by Counties](https://github.com/nytimes/covid-19-data/tree/master/mask-use) 
+    + 
+    + 
     
-### US Map
+##### **TidyCensus**
+- [Census Data](https://walker-data.com/tidycensus/articles/basic-usage.html)  
+    +
+
+##### **Presidential Election Results**
+- [County Election Data](https://github.com/favstats/USElection2020-NYT-Results/blob/master/README.Rmd)
+    +
+
+
+
+##### **Interesting Links** 
+
+- [New York Times Map](https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html)
+- [John Hopkins Coronavirus Map](https://coronavirus.jhu.edu/map.html) 
+- [New York Times States' Restrictions and Outbreak](https://www.nytimes.com/interactive/2020/11/18/us/covid-state-restrictions.html) 
+
+
+column 
+-------------------------------------
+
+### **Figures and Tables:**
+
+##### **US Map**
     
 This map shows all the counties in the US colored by which ever presidential candidate received the majority of votes within the county, and shaded by either the COVID-19 infection rate or COVID-19 death rate for each county. Therefore, dark red counties indicate a Trump victory where there is also a high infection/death rate. Dark blue counties indicate a Biden victory with a high infection/death rate. Light Red for a Trump victory and low infection/death rate, and light blue for a Biden victory with a low infection/death rate.
 This map is interactive, so you can pan around and zoom in to find specific counties, toggle between showing the infection and death rate, and also turn the election results on and off.
 
 We got our data from the [NY Times](https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html)
    
-### County Infection Rate by 2020 Presidential Election Winner
+
+##### **County Infection Rate by 2020 Presidential Election Winner**
 
 The COVID-19 infection rate per 100k people was calculated for each county in the United States. Dotted lines represent the 3 counties with the highest infection rates that voted either for Biden (blue) or Trump (red) in the 2020 Presidential Election. Solid lines are the average or county infection rates per 100k people colored by voter preference.
 
-
-### Chart 3
+##### **Mask-wearing Adherence by Cases and States**
     
 Some comment
+
+
+
+
+
+
+
+
 

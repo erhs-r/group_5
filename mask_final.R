@@ -9,6 +9,7 @@ library (plotly)
 masks <- master_covid_election %>% 
   mutate(state_infection_rate = (total_cases/ state_population)*100000, 
          total_mask = (frequently + always)*100)
+
 #find top 3 states
 #north dakota, south dakota, iowa
 worst_case_state <- masks %>% 
@@ -53,10 +54,12 @@ med <- state_mask %>%
    
 
 #plot ggplot   
-state_plot <- med%>% 
+state_plot <- med %>% 
   ggplot(aes(x = winner, y = total_mask, 
-             text = paste("County:", county, "<br>",
-                        "Case per 100k:", round(infection_rate_per_100k),"<br>",
+             text = paste(state,":", "<br>",
+                         "State Case per 100K:",round(state_infection_rate),"<br>", 
+                        "County:", county, "<br>",
+                        "County Case per 100k:", round(infection_rate_per_100k),"<br>",
                         "Median:", median_mask))) +
   geom_quasirandom(aes(color = winner, size = infection_rate_per_100k), 
                    alpha=.5, show.legend = FALSE)+
@@ -64,7 +67,7 @@ state_plot <- med%>%
                             .desc = TRUE), ncol = 3) + 
   scale_y_continuous(labels=function(total_mask) paste0(total_mask,"%"))+
   scale_color_manual(values = c("blue", "red"))+
-  labs(x = "", y = "", size ="infection") +
+  labs(x ="", y = "") +
   scale_x_discrete(position ="top") +
   theme_bw()
 
@@ -78,9 +81,9 @@ mask_plot<- ggplotly(state_plot,
   layout(yaxis = list(titlefont = list(size = 15), title =
                         "% of people who frequently or\n always wear their mask"
                       , automargin = T))
-      
-
-
+         
+         
+         
 
 #final plotlk
 mask_plot
