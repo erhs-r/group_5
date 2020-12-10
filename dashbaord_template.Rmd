@@ -2,8 +2,6 @@
 title: "Coronavirus and Election Data"
 output: flexdashboard::flex_dashboard
 ---
-Map {data-orientation=rows}
-=====================================   
 
 ```{r setup, include = FALSE}
 library(tidyverse)
@@ -237,19 +235,6 @@ master_covid_election <- master_covid_election %>%
 
 ```
 
-Row {data-height=600}
--------------------------------------
-
-### **US Map, Infection & Death Rate with Election Overlay**
-```{r include=FALSE}
-source("us_map.R")
-```
-
-```{r}
-us_map
-```
-
-
 Plots
 =====================================  
 
@@ -284,6 +269,24 @@ mask_plot
 ```
 
 ...
+
+Map
+=====================================   
+
+Row {data-height=600}
+-------------------------------------
+
+### **US Map, Infection & Death Rate with Election Overlay**
+```{r include=FALSE}
+source("us_map.R")
+```
+
+```{r}
+us_map
+```
+
+
+
 
 Dashboard Descriptions 
 =====================================  
