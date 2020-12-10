@@ -297,11 +297,10 @@ column
 ##### **New York Times** 
 
 - [COVID-19](https://github.com/nytimes/covid-19-data)
-    +
-    +
+    + Cumulative counts of COVID-19 cases and deaths reported by local governments
 - [Mask-use by Counties](https://github.com/nytimes/covid-19-data/tree/master/mask-use) 
-    + 
-    + 
+    + 250,000 survey responses between July 2, 2020 and July 14, 2020  
+    + How often do you wear a mask in public when you expect to be within six feet of another person?
     
 ##### **TidyCensus**
 - [Census Data](https://walker-data.com/tidycensus/articles/basic-usage.html)  
@@ -330,16 +329,13 @@ column
 This map shows all the counties in the US colored by which ever presidential candidate received the majority of votes within the county, and shaded by either the COVID-19 infection rate or COVID-19 death rate for each county. Therefore, dark red counties indicate a Trump victory where there is also a high infection/death rate. Dark blue counties indicate a Biden victory with a high infection/death rate. Light Red for a Trump victory and low infection/death rate, and light blue for a Biden victory with a low infection/death rate.
 This map is interactive, so you can pan around and zoom in to find specific counties, toggle between showing the infection and death rate, and also turn the election results on and off.
 
-We got our data from the [NY Times](https://www.nytimes.com/interactive/2020/us/coronavirus-us-cases.html)
-   
-
 ##### **County Infection Rate by 2020 Presidential Election Winner**
 
 The COVID-19 infection rate per 100k people was calculated for each county in the United States. Dotted lines represent the 3 counties with the highest infection rates that voted either for Biden (blue) or Trump (red) in the 2020 Presidential Election. Solid lines are the average or county infection rates per 100k people colored by voter preference.
 
 ##### **Mask-wearing Adherence by Cases and States**
     
-Some comment
+This pane depicts three states selected based on their number of COVID-19 cases per 100K people.The highest, middle, and lowest number of cases per 100k people are shown respectively from right to left. Each circle represents a county and the circle size represents how many cases per 100k is in the county. Each county is plotted based on the their reporting of how often they always or frequently wear their mask. Also, more information is provided when one hovers over one county. Finally, the counties are either blue or red to represent whichever candidate receives over 50% majority vote.
 
 
 
