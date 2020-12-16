@@ -75,9 +75,7 @@ state_plot <- med %>%
 
 
 mask_plot<- ggplotly(state_plot, 
-                     tooltip = "text",
-                     texttemplate = "hello",
-                     textposition = "inside") %>% 
+                     tooltip = "text") %>% 
   layout(yaxis = list(titlefont = list(size = 15), title =
                         "% of people who frequently or\n always wear their mask"
                       , automargin = T))
